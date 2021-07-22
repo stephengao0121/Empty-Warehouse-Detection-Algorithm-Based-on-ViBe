@@ -20,6 +20,7 @@
 */
 
 #include "Vibe.h"
+#include "validation.h"
 
 bool white_sum(Mat *img, int threshold){
     int counter= 0;
@@ -42,8 +43,6 @@ int main(int argc, char* argv[])
         return 0;
     }
 
-//    capture.set(CAP_PROP_FRAME_WIDTH,465);
-//    capture.set(CAP_PROP_FRAME_HEIGHT,120);
     if (!capture.isOpened())
     {
         cout << "No camera or video input!" << endl;
@@ -54,11 +53,7 @@ int main(int argc, char* argv[])
     bool count = true;
     bool indicator = false;
     int frame_num = 1;
-    int TP, TN, FP, FN;
-    TP = 0;
-    TN = 0;
-    FP = 0;
-    FN = 0;
+    int *stds = new int[4]{0};
     vector<int> fp, fn;
 
     while (1)
@@ -94,95 +89,20 @@ int main(int argc, char* argv[])
                 for (int j = 0; j < 440; j += 40) {
                     Mat square = FGModel(Rect(i, j, 40, 40));
                     if (white_sum(&square, 100)) {
-//                        cout << "non-empty." << endl;
-//                        if ((frame_num <= 128) ||
-//                            (frame_num >= 2130 && frame_num <= 2153) ||
-//                            (frame_num >= 3621 && frame_num <= 3714) ||
-//                            (frame_num >= 5538 && frame_num <= 5557) ||
-//                            (frame_num >= 7376 && frame_num <= 8866) ||
-//                            (frame_num >= 9800)) {
-//                            FP ++;
-//                            fp.push_back(frame_num);
-//                        }
-//                        else {
-//                            TP ++;
-//                        }
-                        if ((frame_num <= 94) ||
-                           (frame_num >= 2903 && frame_num <= 2942) ||
-                           (frame_num >= 5320 && frame_num <= 5393) ||
-                           (frame_num >= 7902 && frame_num <= 7908) ||
-                           (frame_num >= 8277 && frame_num <= 8327) ||
-                           (frame_num >= 11749)) {
-                            FP ++;
-                            fp.push_back(frame_num);
-                        }
-                        else {
-                            TP ++;
-                        }
-//                        if ((frame_num <= 1147) ||
-//                            (frame_num >= 1944 && frame_num <= 2181) ||
-//                            (frame_num >= 3080 && frame_num <= 3138) ||
-//                            (frame_num >= 3489 && frame_num <= 3658) ||
-//                            (frame_num >= 4072 && frame_num <= 4219) ||
-//                            (frame_num >= 4437 && frame_num <= 5015) ||
-//                            (frame_num >= 5546 && frame_num <= 5704) ||
-//                            (frame_num >= 6144)) {
-//                            FP ++;
-//                            fp.push_back(frame_num);
-//                        }
-//                        else {
-//                            TP ++;
-//                        }
                         indicator = true;
+                        validate_01(frame_num, stds, &fp, &fn, indicator);
+//                        validate_02(frame_num, stds, &fp, &fn, indicator);
+//                        validate_03(frame_num, stds, &fp, &fn, indicator);
                         break;
                     }
                 }
                 if (indicator) break;
             }
-//            if (!indicator) {
-//                if ((frame_num <= 128) ||
-//                    (frame_num >= 2130 && frame_num <= 2153) ||
-//                    (frame_num >= 3621 && frame_num <= 3714) ||
-//                    (frame_num >= 5538 && frame_num <= 5557) ||
-//                    (frame_num >= 7376 && frame_num <= 8866) ||
-//                    (frame_num >= 9800)) {
-//                    TN ++;
-//                }
-//                else {
-//                    FN ++;
-//                    fn.push_back(frame_num);
-//                }
-//            }
             if (!indicator){
-                if ((frame_num <= 94) ||
-                    (frame_num >= 2903 && frame_num <= 2942) ||
-                    (frame_num >= 5320 && frame_num <= 5393) ||
-                    (frame_num >= 7902 && frame_num <= 7908) ||
-                    (frame_num >= 8277 && frame_num <= 8327) ||
-                    (frame_num >= 11749)) {
-                    TN ++;
-                }
-                else {
-                    FN ++;
-                    fn.push_back(frame_num);
-                }
+                validate_01(frame_num, stds, &fp, &fn);
+//                validate_02(frame_num, stds, &fp, &fn);
+//                validate_03(frame_num, stds, &fp, &fn);
             }
-//            if (!indicator) {
-//                if ((frame_num <= 1147) ||
-//                    (frame_num >= 1944 && frame_num <= 2181) ||
-//                    (frame_num >= 3080 && frame_num <= 3138) ||
-//                    (frame_num >= 3489 && frame_num <= 3658) ||
-//                    (frame_num >= 4072 && frame_num <= 4219) ||
-//                    (frame_num >= 4437 && frame_num <= 5015) ||
-//                    (frame_num >= 5546 && frame_num <= 5704) ||
-//                    (frame_num >= 6144)) {
-//                    TN ++;
-//                }
-//                else {
-//                    FN ++;
-//                    fn.push_back(frame_num);
-//                }
-//            }
         }
 
 //        if (frame_num >= 2942 && frame_num <= 5708) {
@@ -206,16 +126,18 @@ int main(int argc, char* argv[])
         frame_num ++;
     }
 
-    cout << "The TP is " << TP << endl;
-    cout << "The TN is " << TN << endl;
-    cout << "The FP is " << FP << endl;
-    cout << "The FN is " << FN << endl;
+    cout << "The TP is " << stds[0] << endl;
+    cout << "The TN is " << stds[1] << endl;
+    cout << "The FP is " << stds[2] << endl;
+    cout << "The FN is " << stds[3] << endl;
     for (int & it : fn){
         cout << "FN frame number is " << it << endl;
     }
     for (int & it : fp){
         cout << "FP frame number is " << it << endl;
     }
+
+    delete[] stds;
 
     return 0;
 }
