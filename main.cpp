@@ -20,7 +20,7 @@
 */
 
 #include "Vibe.h"
-#include <vector>
+#include "change_light.h"
 
 bool white_sum(Mat *img, int threshold){
     int counter= 0;
@@ -35,7 +35,7 @@ bool white_sum(Mat *img, int threshold){
 
 int main(int argc, char* argv[])
 {
-    Mat frame, gray, FGModel, frame2, frame3, gray2, gray3;
+    Mat frame, gray, FGModel, frame2;
     VideoCapture capture;
     capture = VideoCapture(R"(C:\Users\stephen.gao\Desktop\c\test01.avi)");
     if(!capture.isOpened()) {
@@ -71,11 +71,11 @@ int main(int argc, char* argv[])
         cvtColor(frame(Rect(120, 0, 520, 480)), gray, COLOR_RGB2GRAY);
         if (count)
         {
+            vibe.init(gray);
 //            capture >> frame2;
 //            capture >> frame3;
 //            cvtColor(frame2(Rect(120, 0, 520, 480)), gray2, COLOR_RGB2GRAY);
 //            cvtColor(frame3(Rect(120, 0, 520, 480)), gray3, COLOR_RGB2GRAY);
-            vibe.init(gray);
 //            vibe.ProcessFirstFewFrames(gray, gray2, gray3);
             vibe.ProcessFirstFrame(gray);
             cout<<"Training ViBe Success."<<endl;

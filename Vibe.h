@@ -91,8 +91,6 @@ private:
     // Foreground Model Binary Image
     Mat FGModel;
 
-    Mat BgFrame;
-
     // 每个像素点的样本个数
     // Number of pixel's samples
     int num_samples;
