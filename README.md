@@ -15,3 +15,8 @@ main.cpp: main functions, including reading video, determining empty or not and 
 3. Decreasing the background updating rate to 1/32.
 4. Adding a function that can process first 3 frames as the background model, by taking the pixels' average value.
 5. Removing large chunks of comments.
+
+## Update Log
+### 2021.07.22
+* Initial commit.
+* Functionalizing the validation unit. Making the code more readable.
