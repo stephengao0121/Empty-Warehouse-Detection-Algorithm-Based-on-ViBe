@@ -20,7 +20,6 @@
 */
 
 #include "Vibe.h"
-#include "change_light.h"
 
 bool white_sum(Mat *img, int threshold){
     int counter= 0;
