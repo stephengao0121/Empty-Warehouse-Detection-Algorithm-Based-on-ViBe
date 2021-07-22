@@ -4,6 +4,6 @@ A warehouse detection program based on ViBe algorithm, intending to determine wh
   
 ## Structure
 
-Vibe.h
-Vibe.cpp
-main.cpp
+Vibe.h  
+Vibe.cpp  
+main.cpp  
