@@ -22,4 +22,4 @@ main.cpp: main functions, including reading video, determining empty or not and 
 * Functionalizing the validation unit. Making the code more readable.
 
 ### 2021.07.23
-* Adding the implementation of Bayes class, getting ready for integrating bayes inference into the algorithm.
+* Adding the implementation of Bayes class, and getting ready for integrating bayes inference into the algorithm.
