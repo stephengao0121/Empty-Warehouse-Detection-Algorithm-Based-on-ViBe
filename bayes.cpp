@@ -15,11 +15,11 @@ float Bayes::get_py(int value) {
 }
 
 float Bayes::get_pxy(int xvalue, int yvalue) {
-    return float(xy->at(xvalue)[yvalue]) / float(xy->at(xvalue)[0] + xy->at(xvalue)[1]);
+    return float(xy->at(xvalue)[yvalue]) / float(xy->at(0)[yvalue] + xy->at(1)[yvalue]);
 }
 
 float Bayes::get_pyx(int yvalue, int xvalue) {
-    return float(xy->at(xvalue)[yvalue]) / float(xy->at(0)[yvalue] + xy->at(1)[yvalue]);
+    return float(xy->at(xvalue)[yvalue]) / float(xy->at(xvalue)[0] + xy->at(xvalue)[1]);
 }
 
 void Bayes::update(int xvalue, int yvalue) {

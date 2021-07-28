@@ -3,7 +3,6 @@
 #define C_BAYES_H
 
 #include <iostream>
-#include <opencv2/opencv.hpp>
 #include <vector>
 
 using namespace std;

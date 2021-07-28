@@ -23,3 +23,6 @@ main.cpp: main functions, including reading video, determining empty or not and 
 
 ### 2021.07.23
 * Adding the implementation of Bayes class, and getting ready for integrating bayes inference into the algorithm.
+
+### 2021.07.28
+* Adding some light compensation and removement methods, trying to eliminate the effect of variant illumination. After several experiments, gamma correction performs the best, and histogram performs well only on black background case, while others do not act well enough.

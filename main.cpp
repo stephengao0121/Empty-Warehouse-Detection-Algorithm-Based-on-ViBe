@@ -33,6 +33,20 @@ bool white_sum(Mat *img, int threshold){
     else return false;
 }
 
+void norm(const Mat& src, Mat& dst){
+    switch(src.channels()){
+        case 1:
+            normalize(src, dst, 0, 255, NORM_MINMAX, CV_8UC1);
+            break;
+        case 3:
+            normalize(src, dst, 0, 255, NORM_MINMAX, CV_8UC3);
+            break;
+        default:
+            src.copyTo(dst);
+            break;
+    }
+}
+
 int main(int argc, char* argv[])
 {
     Mat frame, gray, FGModel, frame2;
@@ -62,6 +76,46 @@ int main(int argc, char* argv[])
         if (frame.empty())
             continue;
 
+        /* 直方图均衡光照.*/
+//        Mat imageRGB[3];
+//        split(frame, imageRGB);
+//        for (auto & i : imageRGB){
+//            equalizeHist(i, i);
+//        }
+//        merge(imageRGB, 3, frame);
+
+        /* gamma correction.*/
+        Mat X, I;
+        frame.convertTo(X, CV_32FC1);
+        float gamma = 0.5;
+        pow(X, gamma, I);
+        norm(I, frame);
+
+        /* log 变换增强.*/
+//        double temp = 255 / log(256);
+//        Mat imglog(frame.size(), CV_32FC3);
+//        for (int i = 0; i < frame.rows; i++){
+//            for (int j = 0; j < frame.cols; j++){
+//                imglog.at<Vec3f>(i, j)[0] = temp * log(1 + frame.at<Vec3b>(i, j)[0]);
+//                imglog.at<Vec3f>(i, j)[1] = temp * log(1 + frame.at<Vec3b>(i, j)[1]);
+//                imglog.at<Vec3f>(i, j)[2] = temp * log(1 + frame.at<Vec3b>(i, j)[2]);
+//            }
+//        }
+//        normalize(imglog, imglog, 0, 255, NORM_MINMAX);
+//        convertScaleAbs(imglog, frame);
+
+        /* RGB归一化去除光照.*/
+//        Mat src(frame.size(), CV_32FC3);
+//        for (int i = 0; i < frame.rows; i++){
+//            for (int j = 0; j < frame.cols; j++){
+//                src.at<Vec3f>(i, j)[0] = 255 * (float)frame.at<Vec3b>(i, j)[0] / ((float)frame.at<Vec3b>(i, j)[0] + (float)frame.at<Vec3b>(i, j)[1] + (float)frame.at<Vec3b>(i, j)[2] + 0.01);
+//                src.at<Vec3f>(i, j)[1] = 255 * (float)frame.at<Vec3b>(i, j)[1] / ((float)frame.at<Vec3b>(i, j)[0] + (float)frame.at<Vec3b>(i, j)[1] + (float)frame.at<Vec3b>(i, j)[2] + 0.01);
+//                src.at<Vec3f>(i, j)[2] = 255 * (float)frame.at<Vec3b>(i, j)[2] / ((float)frame.at<Vec3b>(i, j)[0] + (float)frame.at<Vec3b>(i, j)[1] + (float)frame.at<Vec3b>(i, j)[2] + 0.01);
+//            }
+//        }
+//        normalize(src, src, 0, 255, NORM_MINMAX);
+//        convertScaleAbs(src, frame);
+
         cvtColor(frame(Rect(120, 0, 520, 480)), gray, COLOR_RGB2GRAY);
         if (count)
         {
@@ -83,29 +137,30 @@ int main(int argc, char* argv[])
             imshow("FGModel", FGModel);
             imshow("input", frame(Rect(120, 0, 520, 480)));
 
-            /* 判断是否为空:  */
+            /* Determining empty or not.*/
             for (int i = 0; i < 480; i += 40) {
                 indicator = false;
                 for (int j = 0; j < 440; j += 40) {
                     Mat square = FGModel(Rect(i, j, 40, 40));
                     if (white_sum(&square, 100)) {
                         indicator = true;
-                        validate_01(frame_num, stds, &fp, &fn, indicator);
-//                        validate_02(frame_num, stds, &fp, &fn, indicator);
-//                        validate_03(frame_num, stds, &fp, &fn, indicator);
+                        validate_01(frame_num, stds, &fp, &fn, indicator);  /* function to validate test01.avi.*/
+//                        validate_02(frame_num, stds, &fp, &fn, indicator);  /* function to validate test02.avi.*/
+//                        validate_03(frame_num, stds, &fp, &fn, indicator);  /* function to validate test03.avi.*/
                         break;
                     }
                 }
                 if (indicator) break;
             }
             if (!indicator){
-                validate_01(frame_num, stds, &fp, &fn);
-//                validate_02(frame_num, stds, &fp, &fn);
-//                validate_03(frame_num, stds, &fp, &fn);
+                validate_01(frame_num, stds, &fp, &fn);  /* function to validate test01.avi.*/
+//                validate_02(frame_num, stds, &fp, &fn);  /* function to validate test02.avi.*/
+//                validate_03(frame_num, stds, &fp, &fn);  /* function to validate test03.avi.*/
             }
         }
 
-//        if (frame_num >= 2942 && frame_num <= 5708) {
+        /* Used to check problematic frames.*/
+//        if (frame_num >= 9050 && frame_num <= 10000) {
 //            cout << "required frame reached." << endl;
 //            if (waitKey(0) == 27) {
 //                frame_num ++;
@@ -113,13 +168,14 @@ int main(int argc, char* argv[])
 //            }
 //        }
 
+        /* Final termination condition.*/
         if (frame_num == capture.get(7)) {
             destroyAllWindows();
             break;
         }
 
-        if (waitKey(1) == 27) {
-//            imwrite(R"(C:\Users\stephen.gao\Desktop\c\background.jpg)", frame);
+        /* Terminate anytime when esc is hit.*/
+        if (waitKey(5) == 27) {
             break;
         }
 
