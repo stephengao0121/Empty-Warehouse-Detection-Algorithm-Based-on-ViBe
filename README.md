@@ -31,5 +31,5 @@ main.cpp: main functions, including reading video, determining empty or not and 
 ### 2021.07.29
 * Trying to implement bayes inference on  
 $$P(Y|X),$$  
-where $$Y$$ stands for emptyness, and $$X$$ stands for door being open or not. However, the testset does not contain enough door opening cases, thus being unable to gather enough quantity to calculate believable probabilities.
+where $Y$ stands for emptyness, and $X$ stands for door being open or not. However, the testset does not contain enough door opening cases, thus being unable to gather enough quantity to calculate believable probabilities.
 * Adding some notations.
