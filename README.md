@@ -26,3 +26,10 @@ main.cpp: main functions, including reading video, determining empty or not and 
 
 ### 2021.07.28
 * Adding some light compensation and removement methods, trying to eliminate the effect of variant illumination. After several experiments, gamma correction performs the best, and histogram performs well only on black background case, while others do not act well enough.
+* Adding some annotations.
+
+### 2021.07.29
+* Trying to implement bayes inference on  
+$P(Y|X),$  
+where $Y$ stands for emptyness, and $X$ stands for door being open or not. However, the testset does not contain enough door opening cases, thus being unable to gather enough quantity to calculate believable probabilities.
+* Adding some notations.

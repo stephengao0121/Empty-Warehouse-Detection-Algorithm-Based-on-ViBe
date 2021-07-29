@@ -21,6 +21,7 @@
 
 #include "Vibe.h"
 #include "validation.h"
+#include "bayes.h"
 
 bool white_sum(Mat *img, int threshold){
     int counter= 0;
@@ -47,6 +48,13 @@ void norm(const Mat& src, Mat& dst){
     }
 }
 
+bool check_open_and_empty(int frame_num){
+    if (frame_num == 94 || frame_num == 2942 || frame_num == 5393 || frame_num == 7908 || frame_num == 8327){
+        return true;
+    }
+    return false;
+}
+
 int main(int argc, char* argv[])
 {
     Mat frame, gray, FGModel, frame2;
@@ -69,6 +77,9 @@ int main(int argc, char* argv[])
     int frame_num = 1;
     int *stds = new int[4]{0};
     vector<int> fp, fn;
+    bool open = false;
+    Bayes nemp_openemp;
+    nemp_openemp.init();
 
     while (1)
     {
@@ -87,7 +98,7 @@ int main(int argc, char* argv[])
         /* gamma correction.*/
         Mat X, I;
         frame.convertTo(X, CV_32FC1);
-        float gamma = 0.5;
+        float gamma = 1.5;
         pow(X, gamma, I);
         norm(I, frame);
 
@@ -127,7 +138,7 @@ int main(int argc, char* argv[])
 //            vibe.ProcessFirstFewFrames(gray, gray2, gray3);
             vibe.ProcessFirstFrame(gray);
             cout<<"Training ViBe Success."<<endl;
-            count=false;
+            count = false;
         }
         else
         {
@@ -144,20 +155,26 @@ int main(int argc, char* argv[])
                     Mat square = FGModel(Rect(i, j, 40, 40));
                     if (white_sum(&square, 100)) {
                         indicator = true;
+                        /* check tp, tn frames.*/
                         validate_01(frame_num, stds, &fp, &fn, indicator);  /* function to validate test01.avi.*/
 //                        validate_02(frame_num, stds, &fp, &fn, indicator);  /* function to validate test02.avi.*/
 //                        validate_03(frame_num, stds, &fp, &fn, indicator);  /* function to validate test03.avi.*/
-                        break;
                     }
                 }
                 if (indicator) break;
             }
+            /* check fp, fn frames.*/
             if (!indicator){
                 validate_01(frame_num, stds, &fp, &fn);  /* function to validate test01.avi.*/
 //                validate_02(frame_num, stds, &fp, &fn);  /* function to validate test02.avi.*/
 //                validate_03(frame_num, stds, &fp, &fn);  /* function to validate test03.avi.*/
             }
+
+//            if (open && indicator){
+//                nemp_openemp.update(1, 1);
+//            }
         }
+//        open = check_open_and_empty(frame_num);
 
         /* Used to check problematic frames.*/
 //        if (frame_num >= 9050 && frame_num <= 10000) {
@@ -192,6 +209,7 @@ int main(int argc, char* argv[])
     for (int & it : fp){
         cout << "FP frame number is " << it << endl;
     }
+//    cout << nemp_openemp.get_pxy(1, 1) << endl;
 
     delete[] stds;
 

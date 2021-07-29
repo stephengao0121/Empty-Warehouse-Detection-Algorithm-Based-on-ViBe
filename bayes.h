@@ -9,6 +9,8 @@ using namespace std;
 
 class Bayes{
 public:
+    Bayes();
+    ~Bayes();
     void init();
     float get_pyx(int, int);
     float get_pxy(int, int);

@@ -40,7 +40,7 @@ using namespace std;
 
 // 子采样概率默认值
 // the Default the probability of random sample
-#define DEFAULT_RANDOM_SAMPLE  64
+#define DEFAULT_RANDOM_SAMPLE  32
 
 class ViBe
 {

@@ -1,5 +1,14 @@
 #include "bayes.h"
 
+
+Bayes::Bayes() {}
+
+Bayes::~Bayes() {
+    delete [] x;
+    delete [] y;
+    delete [] xy;
+}
+
 void Bayes::init() {
     x = new vector<int> (2, 1);
     y = new vector<int> (2, 1);
