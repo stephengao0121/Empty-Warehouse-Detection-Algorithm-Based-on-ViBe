@@ -37,4 +37,4 @@ where $Y$ stands for emptyness, and $X$ stands for door status (being open or no
 ### 2021.07.30
 * Adding some notations.
 * Simplifying the code structure. Easier to operate testing.
-* rewrite destructor of Bayes class, fixing a memory bug.
+* Rewriting destructor of Bayes class, fixing a memory bug.
