@@ -38,3 +38,4 @@ where $Y$ stands for emptyness, and $X$ stands for door status (being open or no
 * Adding some notations.
 * Simplifying the code structure. Easier to operate testing.
 * Rewriting destructor of Bayes class, fixing a memory bug.
+* Creating a new file, called fd.cpp, which contains a implementation of frame difference method. This function is the preperation for adding bayes inference into the algorithm, making fd as the condition in conditional probability.
