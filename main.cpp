@@ -59,7 +59,7 @@ int main(int argc, char* argv[])
 {
     Mat frame, gray, FGModel, frame2;
     VideoCapture capture;
-    capture = VideoCapture(R"(C:\Users\stephen.gao\Desktop\c\test01.avi)");
+    capture = VideoCapture(R"(C:\Users\stephen.gao\Desktop\c\test02.avi)");
     if(!capture.isOpened()) {
         cout << "ERROR: Didn't find this video!" << endl;
         return 0;
@@ -95,7 +95,7 @@ int main(int argc, char* argv[])
 //        }
 //        merge(imageRGB, 3, frame);
 
-        /* gamma correction.*/
+        /* gamma correction. (best)*/
         Mat X, I;
         frame.convertTo(X, CV_32FC1);
         float gamma = 1.5;
@@ -131,11 +131,13 @@ int main(int argc, char* argv[])
         if (count)
         {
             vibe.init(gray);
+            /* Take first 3 frames to construct the model.*/
 //            capture >> frame2;
 //            capture >> frame3;
 //            cvtColor(frame2(Rect(120, 0, 520, 480)), gray2, COLOR_RGB2GRAY);
 //            cvtColor(frame3(Rect(120, 0, 520, 480)), gray3, COLOR_RGB2GRAY);
 //            vibe.ProcessFirstFewFrames(gray, gray2, gray3);
+            /* Take only the first frame to construct the model.*/
             vibe.ProcessFirstFrame(gray);
             cout<<"Training ViBe Success."<<endl;
             count = false;
@@ -155,20 +157,17 @@ int main(int argc, char* argv[])
                     Mat square = FGModel(Rect(i, j, 40, 40));
                     if (white_sum(&square, 100)) {
                         indicator = true;
-                        /* check tp, tn frames.*/
-                        validate_01(frame_num, stds, &fp, &fn, indicator);  /* function to validate test01.avi.*/
-//                        validate_02(frame_num, stds, &fp, &fn, indicator);  /* function to validate test02.avi.*/
-//                        validate_03(frame_num, stds, &fp, &fn, indicator);  /* function to validate test03.avi.*/
+                        break;
                     }
                 }
                 if (indicator) break;
             }
-            /* check fp, fn frames.*/
-            if (!indicator){
-                validate_01(frame_num, stds, &fp, &fn);  /* function to validate test01.avi.*/
-//                validate_02(frame_num, stds, &fp, &fn);  /* function to validate test02.avi.*/
-//                validate_03(frame_num, stds, &fp, &fn);  /* function to validate test03.avi.*/
-            }
+
+            /* check tp, tn, fp, fn frames.*/
+//            validate_01(frame_num, stds, &fp, &fn, indicator);  /* function to validate test01.avi.*/
+            validate_02(frame_num, stds, &fp, &fn, indicator);  /* function to validate test02.avi.*/
+//            validate_03(frame_num, stds, &fp, &fn, indicator);  /* function to validate test03.avi.*/
+
 
 //            if (open && indicator){
 //                nemp_openemp.update(1, 1);
