@@ -1,18 +1,16 @@
 #include "bayes.h"
 
 
-Bayes::Bayes() {}
-
-Bayes::~Bayes() {
-    delete [] x;
-    delete [] y;
-    delete [] xy;
-}
-
-void Bayes::init() {
+Bayes::Bayes() {
     x = new vector<int> (2, 1);
     y = new vector<int> (2, 1);
     xy = new vector<vector<int>> (2, vector<int> (2, 1));
+}
+
+Bayes::~Bayes() {
+    delete x;
+    delete y;
+    delete xy;
 }
 
 float Bayes::get_px(int value) {
@@ -36,3 +34,5 @@ void Bayes::update(int xvalue, int yvalue) {
     y->at(yvalue) ++;
     xy->at(xvalue)[yvalue] ++;
 }
+
+

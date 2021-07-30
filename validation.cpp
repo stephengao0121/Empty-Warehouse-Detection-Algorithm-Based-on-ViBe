@@ -14,7 +14,7 @@ void validate_01(int num, int *arr, vector<int> *fp, vector<int> *fn, bool indic
     else {
         if ((num <= 94) || (num >= 2902 && num <= 2942) || (num >= 5320 && num <= 5393) ||
             (num >= 7902 && num <= 7908) || (num >= 8277 && num <= 8327) || (num >= 11749)) {
-            arr[1] ++;
+            arr[1]++;
         }
         else {
             arr[3]++;

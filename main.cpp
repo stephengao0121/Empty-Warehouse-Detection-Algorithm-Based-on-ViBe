@@ -75,11 +75,10 @@ int main(int argc, char* argv[])
     bool count = true;
     bool indicator = false;
     int frame_num = 1;
-    int *stds = new int[4]{0};
+    int stds[4];
     vector<int> fp, fn;
     bool open = false;
     Bayes nemp_openemp;
-    nemp_openemp.init();
 
     while (1)
     {
@@ -168,7 +167,6 @@ int main(int argc, char* argv[])
             validate_02(frame_num, stds, &fp, &fn, indicator);  /* function to validate test02.avi.*/
 //            validate_03(frame_num, stds, &fp, &fn, indicator);  /* function to validate test03.avi.*/
 
-
 //            if (open && indicator){
 //                nemp_openemp.update(1, 1);
 //            }
@@ -191,7 +189,7 @@ int main(int argc, char* argv[])
         }
 
         /* Terminate anytime when esc is hit.*/
-        if (waitKey(5) == 27) {
+        if (waitKey(1) == 27) {
             break;
         }
 
@@ -202,15 +200,17 @@ int main(int argc, char* argv[])
     cout << "The TN is " << stds[1] << endl;
     cout << "The FP is " << stds[2] << endl;
     cout << "The FN is " << stds[3] << endl;
-    for (int & it : fn){
-        cout << "FN frame number is " << it << endl;
+    if (!fn.empty()) {
+        for (int &it : fn) {
+            cout << "FN frame number is " << it << endl;
+        }
     }
-    for (int & it : fp){
-        cout << "FP frame number is " << it << endl;
+    if (!fp.empty()) {
+        for (int &it : fp) {
+            cout << "FP frame number is " << it << endl;
+        }
     }
 //    cout << nemp_openemp.get_pxy(1, 1) << endl;
-
-    delete[] stds;
 
     return 0;
 }
