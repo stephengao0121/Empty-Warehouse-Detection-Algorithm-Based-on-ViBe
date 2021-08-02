@@ -55,25 +55,23 @@ bool check_open_and_empty(int frame_num){
     return false;
 }
 
-int fd(Mat &currentFrame, Mat &rawFrame){
+Mat fd(Mat &currentFrame, Mat &rawFrame){
     Mat currentFrameGray, frameDiff;
-    cv::cvtColor(currentFrame, currentFrameGray, COLOR_BGR2GRAY);
+//    cv::cvtColor(currentFrame, currentFrameGray, COLOR_BGR2GRAY);
     //GaussianBlur(currentFrameGray, currentFrameGray, Size(21, 21), 0, 0);
-    cv::absdiff(rawFrame, currentFrameGray, frameDiff);   //原始与当前做差
+    cv::absdiff(rawFrame, currentFrame, frameDiff);   //原始与当前做差
     cv::threshold(frameDiff, frameDiff, 70, 255, THRESH_BINARY);//全局固定阈值,这个阈值的选择计算以及面对光照的影响
     //cv::threshold(frameDiff, frameDiff, 0, 255, CV_THRESH_BINARY| CV_THRESH_OTSU);//otsu在场景中没有东西的时候效果很差，也许是阈值处理不合适。有东西时还可以
     //cv::adaptiveThreshold(frameDiff, frameDiff, 255, ADAPTIVE_THRESH_MEAN_C, THRESH_BINARY, 11, -2);//效果不好
     //先膨胀后腐蚀排除小黑点，反过来是排除小亮点
     cv::erode(frameDiff, frameDiff, cv::Mat());//腐蚀 减少很多点
     cv::dilate(frameDiff, frameDiff, cv::Mat());//膨胀   //别人是相反的
-    imshow("current", currentFrame);
-    imshow("diff", frameDiff);
-    return 0;
+    return frameDiff;
 }
 
 int main(int argc, char* argv[])
 {
-    Mat frame, gray, FGModel, frame2;
+    Mat frame, gray, FGModel, raw_frame, FDModel;
     VideoCapture capture;
     capture = VideoCapture(R"(C:\Users\stephen.gao\Desktop\c\test01.avi)");
     if(!capture.isOpened()) {
@@ -88,13 +86,13 @@ int main(int argc, char* argv[])
     }
 
     ViBe vibe;
-    bool count = true;
+    bool vibe_indicator = false;
+    bool fd_indicator = false;
     bool indicator = false;
     int frame_num = 1;
-    int stds[4];
+    int stds[4]{0, 0, 0, 0};
     vector<int> fp, fn;
-    bool open = false;
-    Bayes nemp_openemp;
+    NaiveBayes NBClassifier(2);
 
     while (1)
     {
@@ -143,7 +141,7 @@ int main(int argc, char* argv[])
 //        convertScaleAbs(src, frame);
 
         cvtColor(frame(Rect(120, 0, 520, 480)), gray, COLOR_RGB2GRAY);
-        if (count)
+        if (frame_num == 1)
         {
             vibe.init(gray);
             /* Take first 3 frames to construct the model.*/
@@ -152,42 +150,58 @@ int main(int argc, char* argv[])
 //            cvtColor(frame2(Rect(120, 0, 520, 480)), gray2, COLOR_RGB2GRAY);
 //            cvtColor(frame3(Rect(120, 0, 520, 480)), gray3, COLOR_RGB2GRAY);
 //            vibe.ProcessFirstFewFrames(gray, gray2, gray3);
+
             /* Take only the first frame to construct the model.*/
             vibe.ProcessFirstFrame(gray);
-            cout<<"Training ViBe Success."<<endl;
-            count = false;
+
+            gray.copyTo(raw_frame);
+            cout << "Training ViBe Success." << endl;
+            cout << "Frame Difference Background Construction Success." << endl;
         }
         else
         {
             vibe.Run(gray);
             FGModel = vibe.getFGModel();
-			morphologyEx(FGModel, FGModel, MORPH_OPEN, Mat());
+            morphologyEx(FGModel, FGModel, MORPH_OPEN, Mat());
+            FDModel = fd(gray, raw_frame);
             imshow("FGModel", FGModel);
+            imshow("FDModel", FDModel);
             imshow("input", frame(Rect(120, 0, 520, 480)));
 
-            /* Determining empty or not.*/
+            /* Vibe decision.*/
             for (int i = 0; i < 480; i += 40) {
-                indicator = false;
+                vibe_indicator = false;
                 for (int j = 0; j < 440; j += 40) {
                     Mat square = FGModel(Rect(i, j, 40, 40));
                     if (white_sum(&square, 100)) {
-                        indicator = true;
+                        vibe_indicator = true;
                         break;
                     }
                 }
-                if (indicator) break;
+                if (vibe_indicator) break;
             }
+
+            /* FD decision.*/
+            for (int i = 0; i < 480; i += 40) {
+                fd_indicator = false;
+                for (int j = 0; j < 440; j += 40) {
+                    Mat square = FDModel(Rect(i, j, 40, 40));
+                    if (white_sum(&square, 100)) {
+                        fd_indicator = true;
+                        break;
+                    }
+                }
+                if (fd_indicator) break;
+            }
+
+            /* Bayes decision.*/
+            indicator = fd_indicator;
 
             /* check tp, tn, fp, fn frames.*/
             validate_01(frame_num, stds, &fp, &fn, indicator);  /* function to validate test01.avi.*/
 //            validate_02(frame_num, stds, &fp, &fn, indicator);  /* function to validate test02.avi.*/
 //            validate_03(frame_num, stds, &fp, &fn, indicator);  /* function to validate test03.avi.*/
-
-//            if (open && indicator){
-//                nemp_openemp.update(1, 1);
-//            }
         }
-//        open = check_open_and_empty(frame_num);
 
         /* Used to check problematic frames.*/
 //        if (frame_num >= 9050 && frame_num <= 10000) {
@@ -205,7 +219,7 @@ int main(int argc, char* argv[])
         }
 
         /* Terminate anytime when esc is hit.*/
-        if (waitKey(15) == 27) {
+        if (waitKey(1) == 27) {
             break;
         }
 
@@ -226,7 +240,6 @@ int main(int argc, char* argv[])
             cout << "FP frame number is " << it << endl;
         }
     }
-//    cout << nemp_openemp.get_pxy(1, 1) << endl;
 
     return 0;
 }

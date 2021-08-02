@@ -40,3 +40,7 @@ where $Y$ stands for emptyness, and $X$ stands for door status (being open or no
 * Rewriting destructor of Bayes class, fixing a memory bug.
 * Creating a new file, called fd.cpp, which contains a implementation of frame difference method. This function is the preperation for adding bayes inference into the algorithm, making fd as the condition in conditional probability.
 * Put function fd() into main.py. Remove fd.cpp.
+
+### 2021.08.02
+* Rewriting bayes.cpp and bayes.h. Now they form a naive bayes classifier, used to improve robustness. The classifier is ready for intergation.
+* Frame difference is integrated into main.cpp. Working well.

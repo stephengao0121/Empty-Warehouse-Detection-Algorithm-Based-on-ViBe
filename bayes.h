@@ -7,18 +7,19 @@
 
 using namespace std;
 
-class Bayes{
+class NaiveBayes{
 public:
-    Bayes();
-    ~Bayes();
-    float get_pyx(int, int);
-    float get_pxy(int, int);
-    float get_px(int);
-    float get_py(int);
-    void update(int, int);
+    explicit NaiveBayes(int cond = 1);
+    ~NaiveBayes() = default;
+    void fit(vector<vector<int>> *);
+    int predict(vector<int> *) const;
+    vector<float>* get_var_probs() const;
+    vector<vector<vector<float>> *>* get_cond_probs() const;
 private:
-    vector<int> *y, *x;  /* N(Y), N(X), Y, X = {0, 1}*/
-    vector<vector<int>> *xy;  /* N(X|Y), Y, X = {0, 1}*/
+    int cond_num;
+    int var_num;
+    vector<int> *variables;
+    vector<vector<vector<int>> *> *conditions;
 };
 
 #endif //C_BAYES_H

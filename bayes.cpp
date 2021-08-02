@@ -1,38 +1,64 @@
 #include "bayes.h"
 
 
-Bayes::Bayes() {
-    x = new vector<int> (2, 1);
-    y = new vector<int> (2, 1);
-    xy = new vector<vector<int>> (2, vector<int> (2, 1));
+NaiveBayes::NaiveBayes(int cond) {
+    cond_num = cond;
+    var_num = 1;
+    variables = new vector<int>(2, 1);
+    conditions = new vector<vector<vector<int>> *>(cond_num, nullptr);
+    for (int i = 0; i < cond_num; i++){
+        auto *vec = new vector<vector<int>>(2, vector<int>(2, 1));
+        if (vec == nullptr) return;
+        conditions->at(i) = vec;
+    }
 }
 
-Bayes::~Bayes() {
-    delete x;
-    delete y;
-    delete xy;
+void NaiveBayes::fit(vector<vector<int>> *data) {
+    for (auto i : *data){
+        variables->at(i[2]) ++;
+        conditions->at(0)->at(i[0])[i[2]] ++;
+        conditions->at(1)->at(i[1])[i[2]] ++;
+    }
 }
 
-float Bayes::get_px(int value) {
-    return float(x->at(value)) / float(x->at(0) + x->at(1));
+int NaiveBayes::predict(vector<int> *data) const {
+    auto *probs = new float [2];
+    auto var_probs = get_var_probs();
+    auto cond_probs = get_cond_probs();
+
+    for (int i = 0; i < 1; i++){
+        float a = 1;
+        a *= var_probs->at(i);
+        for (int j = 0; j < cond_num; j++){
+            a *= cond_probs->at(j)->at(0)[data->at(i)];
+            a *= cond_probs->at(j)->at(1)[data->at(i)];
+        }
+        probs[i] = a;
+    }
+    if (probs[0] > probs[1]) return 0;
+    else return 1;
 }
 
-float Bayes::get_py(int value) {
-    return float(y->at(value)) / float(y->at(0) + y->at(1));
+vector<float>* NaiveBayes::get_var_probs() const {
+    auto *probs = new vector<float>(2, 0);
+    probs->at(0) = float(variables->at(0)) / float(variables->at(0) + variables->at(1));
+    probs->at(1) = float(variables->at(1)) / float(variables->at(0) + variables->at(1));
+    return probs;
 }
 
-float Bayes::get_pxy(int xvalue, int yvalue) {
-    return float(xy->at(xvalue)[yvalue]) / float(xy->at(0)[yvalue] + xy->at(1)[yvalue]);
-}
+vector<vector<vector<float>> *>* NaiveBayes::get_cond_probs() const {
+    auto *probs = new vector<vector<vector<float>> *>(cond_num, nullptr);
+    for (int i = 0; i < cond_num; i++){
+        auto *vec = new vector<vector<float>>(2, vector<float>(2, 0));
+        if (vec == nullptr) return nullptr;
+        vec->at(0)[0] = float(conditions->at(i)->at(0)[0]) / float(conditions->at(i)->at(0)[0] + conditions->at(i)->at(1)[0]);
+        vec->at(0)[1] = float(conditions->at(i)->at(0)[1]) / float(conditions->at(i)->at(0)[1] + conditions->at(i)->at(1)[1]);
+        vec->at(1)[0] = float(conditions->at(i)->at(1)[0]) / float(conditions->at(i)->at(0)[0] + conditions->at(i)->at(1)[0]);
+        vec->at(1)[1] = float(conditions->at(i)->at(1)[1]) / float(conditions->at(i)->at(0)[1] + conditions->at(i)->at(1)[1]);
+        probs->at(i) = vec;
+    }
 
-float Bayes::get_pyx(int yvalue, int xvalue) {
-    return float(xy->at(xvalue)[yvalue]) / float(xy->at(xvalue)[0] + xy->at(xvalue)[1]);
-}
-
-void Bayes::update(int xvalue, int yvalue) {
-    x->at(xvalue) ++;
-    y->at(yvalue) ++;
-    xy->at(xvalue)[yvalue] ++;
+    return probs;
 }
 
 
