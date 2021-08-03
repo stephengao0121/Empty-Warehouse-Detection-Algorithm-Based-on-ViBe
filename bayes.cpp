@@ -13,12 +13,10 @@ NaiveBayes::NaiveBayes(int cond) {
     }
 }
 
-void NaiveBayes::fit(vector<vector<int>> *data) {
-    for (auto i : *data){
-        variables->at(i[2]) ++;
-        conditions->at(0)->at(i[0])[i[2]] ++;
-        conditions->at(1)->at(i[1])[i[2]] ++;
-    }
+void NaiveBayes::fit(vector<int> *data) {
+    variables->at(data->at(2)) ++;
+    conditions->at(0)->at(data->at(0))[data->at(2)] ++;
+    conditions->at(1)->at(data->at(1))[data->at(2)] ++;
 }
 
 int NaiveBayes::predict(vector<int> *data) const {
@@ -26,12 +24,11 @@ int NaiveBayes::predict(vector<int> *data) const {
     auto var_probs = get_var_probs();
     auto cond_probs = get_cond_probs();
 
-    for (int i = 0; i < 1; i++){
+    for (int i = 0; i < 2; i++){
         float a = 1;
         a *= var_probs->at(i);
         for (int j = 0; j < cond_num; j++){
-            a *= cond_probs->at(j)->at(0)[data->at(i)];
-            a *= cond_probs->at(j)->at(1)[data->at(i)];
+            a *= cond_probs->at(j)->at(data->at(j))[i];
         }
         probs[i] = a;
     }
@@ -57,8 +54,15 @@ vector<vector<vector<float>> *>* NaiveBayes::get_cond_probs() const {
         vec->at(1)[1] = float(conditions->at(i)->at(1)[1]) / float(conditions->at(i)->at(0)[1] + conditions->at(i)->at(1)[1]);
         probs->at(i) = vec;
     }
-
     return probs;
+}
+
+vector<int> *NaiveBayes::get_variables() {
+    return variables;
+}
+
+vector<vector<vector<int>> *> *NaiveBayes::get_conditions() {
+    return conditions;
 }
 
 

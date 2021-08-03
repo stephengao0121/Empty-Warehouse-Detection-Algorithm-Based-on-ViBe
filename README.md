@@ -39,8 +39,11 @@ where $Y$ stands for emptyness, and $X$ stands for door status (being open or no
 * Simplifying the code structure. Easier to operate testing.
 * Rewriting destructor of Bayes class, fixing a memory bug.
 * Creating a new file, called fd.cpp, which contains a implementation of frame difference method. This function is the preperation for adding bayes inference into the algorithm, making fd as the condition in conditional probability.
-* Put function fd() into main.py. Remove fd.cpp.
+* Putting function fd() into main.py. Removing fd.cpp.
 
 ### 2021.08.02
 * Rewriting bayes.cpp and bayes.h. Now they form a naive bayes classifier, used to improve robustness. The classifier is ready for intergation.
 * Frame difference is integrated into main.cpp. Working well.
+
+### 2021.08.03
+* Integrating naive bayes into main.py. It takes both ViBe and fd as the condition to predict the result. First 2000 frames is decided by ViBe || fd, and the vector <vibe, fd, true_label> is fitted in naive bayes classifier. From the 2001th frame on, the decision is made by naive bayes classifier. New frames along with its vibe, fd and acutal label is put into naive bayes for further training.

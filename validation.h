@@ -7,8 +7,8 @@
 
 using namespace std;
 
-void validate_01(int num, int *arr, vector<int> *fp, vector<int> *fn, bool indicator = false);
-void validate_02(int num, int *arr, vector<int> *fp, vector<int> *fn, bool indicator = false);
-void validate_03(int num, int *arr, vector<int> *fp, vector<int> *fn, bool indicator = false);
+bool validate_01(int num, int *arr, vector<int> *fp, vector<int> *fn, bool indicator = false);
+bool validate_02(int num, int *arr, vector<int> *fp, vector<int> *fn, bool indicator = false);
+bool validate_03(int num, int *arr, vector<int> *fp, vector<int> *fn, bool indicator = false);
 
 #endif //C_VALIDATION_H

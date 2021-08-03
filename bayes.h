@@ -11,10 +11,12 @@ class NaiveBayes{
 public:
     explicit NaiveBayes(int cond = 1);
     ~NaiveBayes() = default;
-    void fit(vector<vector<int>> *);
+    void fit(vector<int> *);
     int predict(vector<int> *) const;
     vector<float>* get_var_probs() const;
     vector<vector<vector<float>> *>* get_cond_probs() const;
+    vector<int> * get_variables();
+    vector<vector<vector<int>> *> * get_conditions();
 private:
     int cond_num;
     int var_num;

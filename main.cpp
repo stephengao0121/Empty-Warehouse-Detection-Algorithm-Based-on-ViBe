@@ -48,11 +48,8 @@ void norm(const Mat& src, Mat& dst){
     }
 }
 
-bool check_open_and_empty(int frame_num){
-    if (frame_num == 94 || frame_num == 2942 || frame_num == 5393 || frame_num == 7908 || frame_num == 8327){
-        return true;
-    }
-    return false;
+bool answer(int frame_num){
+    return 0;
 }
 
 Mat fd(Mat &currentFrame, Mat &rawFrame){
@@ -194,13 +191,20 @@ int main(int argc, char* argv[])
                 if (fd_indicator) break;
             }
 
-            /* Bayes decision.*/
-            indicator = fd_indicator;
+            /* Start Bayes decision after first 2000 frames. Before that, use ViBe || fd.*/
+            if (frame_num <= 2000){
+                indicator = vibe_indicator || fd_indicator;
+            }
+            else{
+                vector<int> vec = {vibe_indicator, fd_indicator};
+                indicator = NBClassifier.predict(&vec);
+            }
 
             /* check tp, tn, fp, fn frames.*/
-            validate_01(frame_num, stds, &fp, &fn, indicator);  /* function to validate test01.avi.*/
-//            validate_02(frame_num, stds, &fp, &fn, indicator);  /* function to validate test02.avi.*/
-//            validate_03(frame_num, stds, &fp, &fn, indicator);  /* function to validate test03.avi.*/
+            vector<int> vec = {vibe_indicator, fd_indicator, validate_01(frame_num, stds, &fp, &fn, indicator)};  /* function to validate test01.avi.*/
+//            vector<int> vec = {vibe_indicator, fd_indicator, validate_02(frame_num, stds, &fp, &fn, indicator)};  /* function to validate test02.avi.*/
+//            vector<int> vec = {vibe_indicator, fd_indicator, validate_03(frame_num, stds, &fp, &fn, indicator)};  /* function to validate test03.avi.*/
+            NBClassifier.fit(&vec);
         }
 
         /* Used to check problematic frames.*/
