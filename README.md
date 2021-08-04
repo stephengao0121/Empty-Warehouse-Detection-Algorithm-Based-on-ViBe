@@ -48,3 +48,7 @@ where $Y$ stands for emptyness, and $X$ stands for door status (being open or no
 ### 2021.08.03
 * Integrating naive bayes into main.cpp. It takes both ViBe and fd as the condition to predict the result. First 2000 frames is decided by ViBe || fd, and the vector <vibe, fd, true_label> is fitted in naive bayes classifier. From the 2001th frame on, the decision is made by naive bayes classifier. New frames along with its vibe, fd and acutal label is put into naive bayes for further training.
 * Rewriting validate functions, in order to be made compatible to naive bayes needs.
+
+### 2021.08.04
+* Revising and adding some notations.
+* Adding the naive bayes classifier is no worse than simple vibe. Robustness needs to be further validated.

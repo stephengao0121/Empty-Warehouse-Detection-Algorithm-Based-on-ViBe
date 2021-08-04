@@ -54,15 +54,10 @@ bool answer(int frame_num){
 
 Mat fd(Mat &currentFrame, Mat &rawFrame){
     Mat currentFrameGray, frameDiff;
-//    cv::cvtColor(currentFrame, currentFrameGray, COLOR_BGR2GRAY);
-//    GaussianBlur(currentFrameGray, currentFrameGray, Size(21, 21), 0, 0);
-    cv::absdiff(rawFrame, currentFrame, frameDiff);   //原始与当前做差
-    cv::threshold(frameDiff, frameDiff, 70, 255, THRESH_BINARY);//全局固定阈值,这个阈值的选择计算以及面对光照的影响
-//    cv::threshold(frameDiff, frameDiff, 0, 255, CV_THRESH_BINARY| CV_THRESH_OTSU);//otsu在场景中没有东西的时候效果很差，也许是阈值处理不合适。有东西时还可以
-//    cv::adaptiveThreshold(frameDiff, frameDiff, 255, ADAPTIVE_THRESH_MEAN_C, THRESH_BINARY, 11, -2);//效果不好
-    /* 先膨胀后腐蚀排除小黑点，反过来是排除小亮点*/
-    cv::erode(frameDiff, frameDiff, cv::Mat());//腐蚀 减少很多点
-    cv::dilate(frameDiff, frameDiff, cv::Mat());//膨胀   //别人是相反的
+    cv::absdiff(rawFrame, currentFrame, frameDiff);
+    cv::threshold(frameDiff, frameDiff, 70, 255, THRESH_BINARY);
+    cv::erode(frameDiff, frameDiff, cv::Mat());
+    cv::dilate(frameDiff, frameDiff, cv::Mat());
     return frameDiff;
 }
 
@@ -70,7 +65,7 @@ int main(int argc, char* argv[])
 {
     Mat frame, gray, FGModel, raw_frame, FDModel;
     VideoCapture capture;
-    capture = VideoCapture(R"(C:\Users\stephen.gao\Desktop\c\test03.avi)");
+    capture = VideoCapture(R"(C:\Users\stephen.gao\Desktop\c\test01.avi)");
     if(!capture.isOpened()) {
         cout << "ERROR: Didn't find this video!" << endl;
         return 0;
@@ -141,16 +136,9 @@ int main(int argc, char* argv[])
         if (frame_num == 1)
         {
             vibe.init(gray);
-            /* Take first 3 frames to construct the model.*/
-//            capture >> frame2;
-//            capture >> frame3;
-//            cvtColor(frame2(Rect(120, 0, 520, 480)), gray2, COLOR_RGB2GRAY);
-//            cvtColor(frame3(Rect(120, 0, 520, 480)), gray3, COLOR_RGB2GRAY);
-//            vibe.ProcessFirstFewFrames(gray, gray2, gray3);
-
             /* Take only the first frame to construct the model.*/
             vibe.ProcessFirstFrame(gray);
-
+            /* Construct background frame of fd.*/
             gray.copyTo(raw_frame);
             cout << "Training ViBe Success." << endl;
             cout << "Frame Difference Background Construction Success." << endl;
@@ -191,7 +179,7 @@ int main(int argc, char* argv[])
                 if (fd_indicator) break;
             }
 
-            /* Start Bayes decision after first 2000 frames. Before that, use ViBe || fd.*/
+            /* Start Bayes decision after first 2000 frames. Before that, use vibe || fd.*/
             if (frame_num <= 2000){
                 indicator = vibe_indicator || fd_indicator;
             }
@@ -201,9 +189,9 @@ int main(int argc, char* argv[])
             }
 
             /* check tp, tn, fp, fn frames.*/
-//            vector<int> vec = {vibe_indicator, fd_indicator, validate_01(frame_num, stds, &fp, &fn, indicator)};  /* function to validate test01.avi.*/
+            vector<int> vec = {vibe_indicator, fd_indicator, validate_01(frame_num, stds, &fp, &fn, indicator)};  /* function to validate test01.avi.*/
 //            vector<int> vec = {vibe_indicator, fd_indicator, validate_02(frame_num, stds, &fp, &fn, indicator)};  /* function to validate test02.avi.*/
-            vector<int> vec = {vibe_indicator, fd_indicator, validate_03(frame_num, stds, &fp, &fn, indicator)};  /* function to validate test03.avi.*/
+//            vector<int> vec = {vibe_indicator, fd_indicator, validate_03(frame_num, stds, &fp, &fn, indicator)};  /* function to validate test03.avi.*/
             NBClassifier.fit(&vec);
         }
 
@@ -223,13 +211,14 @@ int main(int argc, char* argv[])
         }
 
         /* Terminate anytime when esc is hit.*/
-        if (waitKey(1) == 27) {
+        if (waitKey(25) == 27) {
             break;
         }
 
         frame_num ++;
     }
 
+    /* Visualize tp, tn, fp, fn numbers and positions.*/
     cout << "The TP is " << stds[0] << endl;
     cout << "The TN is " << stds[1] << endl;
     cout << "The FP is " << stds[2] << endl;
