@@ -46,5 +46,5 @@ where $Y$ stands for emptyness, and $X$ stands for door status (being open or no
 * Frame difference is integrated into main.cpp. Working well.
 
 ### 2021.08.03
-* Integrating naive bayes into main.py. It takes both ViBe and fd as the condition to predict the result. First 2000 frames is decided by ViBe || fd, and the vector <vibe, fd, true_label> is fitted in naive bayes classifier. From the 2001th frame on, the decision is made by naive bayes classifier. New frames along with its vibe, fd and acutal label is put into naive bayes for further training.
+* Integrating naive bayes into main.cpp. It takes both ViBe and fd as the condition to predict the result. First 2000 frames is decided by ViBe || fd, and the vector <vibe, fd, true_label> is fitted in naive bayes classifier. From the 2001th frame on, the decision is made by naive bayes classifier. New frames along with its vibe, fd and acutal label is put into naive bayes for further training.
 * Rewriting validate functions, in order to be made compatible to naive bayes needs.
