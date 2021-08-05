@@ -48,10 +48,6 @@ void norm(const Mat& src, Mat& dst){
     }
 }
 
-bool answer(int frame_num){
-    return 0;
-}
-
 Mat fd(Mat &currentFrame, Mat &rawFrame){
     Mat currentFrameGray, frameDiff;
     cv::absdiff(rawFrame, currentFrame, frameDiff);
@@ -65,7 +61,7 @@ int main(int argc, char* argv[])
 {
     Mat frame, gray, FGModel, raw_frame, FDModel;
     VideoCapture capture;
-    capture = VideoCapture(R"(C:\Users\stephen.gao\Desktop\c\test01.avi)");
+    capture = VideoCapture(R"(C:\Users\stephen.gao\Desktop\c\test03.avi)");
     if(!capture.isOpened()) {
         cout << "ERROR: Didn't find this video!" << endl;
         return 0;
@@ -92,45 +88,12 @@ int main(int argc, char* argv[])
         if (frame.empty())
             continue;
 
-        /* 直方图均衡光照.*/
-//        Mat imageRGB[3];
-//        split(frame, imageRGB);
-//        for (auto & i : imageRGB){
-//            equalizeHist(i, i);
-//        }
-//        merge(imageRGB, 3, frame);
-
         /* gamma correction. (best)*/
         Mat X, I;
         frame.convertTo(X, CV_32FC1);
         float gamma = 1.5;
         pow(X, gamma, I);
         norm(I, frame);
-
-        /* log 变换增强.*/
-//        double temp = 255 / log(256);
-//        Mat imglog(frame.size(), CV_32FC3);
-//        for (int i = 0; i < frame.rows; i++){
-//            for (int j = 0; j < frame.cols; j++){
-//                imglog.at<Vec3f>(i, j)[0] = temp * log(1 + frame.at<Vec3b>(i, j)[0]);
-//                imglog.at<Vec3f>(i, j)[1] = temp * log(1 + frame.at<Vec3b>(i, j)[1]);
-//                imglog.at<Vec3f>(i, j)[2] = temp * log(1 + frame.at<Vec3b>(i, j)[2]);
-//            }
-//        }
-//        normalize(imglog, imglog, 0, 255, NORM_MINMAX);
-//        convertScaleAbs(imglog, frame);
-
-        /* RGB归一化去除光照.*/
-//        Mat src(frame.size(), CV_32FC3);
-//        for (int i = 0; i < frame.rows; i++){
-//            for (int j = 0; j < frame.cols; j++){
-//                src.at<Vec3f>(i, j)[0] = 255 * (float)frame.at<Vec3b>(i, j)[0] / ((float)frame.at<Vec3b>(i, j)[0] + (float)frame.at<Vec3b>(i, j)[1] + (float)frame.at<Vec3b>(i, j)[2] + 0.01);
-//                src.at<Vec3f>(i, j)[1] = 255 * (float)frame.at<Vec3b>(i, j)[1] / ((float)frame.at<Vec3b>(i, j)[0] + (float)frame.at<Vec3b>(i, j)[1] + (float)frame.at<Vec3b>(i, j)[2] + 0.01);
-//                src.at<Vec3f>(i, j)[2] = 255 * (float)frame.at<Vec3b>(i, j)[2] / ((float)frame.at<Vec3b>(i, j)[0] + (float)frame.at<Vec3b>(i, j)[1] + (float)frame.at<Vec3b>(i, j)[2] + 0.01);
-//            }
-//        }
-//        normalize(src, src, 0, 255, NORM_MINMAX);
-//        convertScaleAbs(src, frame);
 
         cvtColor(frame(Rect(120, 0, 520, 480)), gray, COLOR_RGB2GRAY);
         if (frame_num == 1)
@@ -188,21 +151,15 @@ int main(int argc, char* argv[])
                 indicator = NBClassifier.predict(&vec);
             }
 
-            /* check tp, tn, fp, fn frames.*/
-            vector<int> vec = {vibe_indicator, fd_indicator, validate_01(frame_num, stds, &fp, &fn, indicator)};  /* function to validate test01.avi.*/
+            /* check tp, tn, fp, fn frames, and form a vector of results from both algorithms.*/
+//            vector<int> vec = {vibe_indicator, fd_indicator, validate_01(frame_num, stds, &fp, &fn, indicator)};  /* function to validate test01.avi.*/
 //            vector<int> vec = {vibe_indicator, fd_indicator, validate_02(frame_num, stds, &fp, &fn, indicator)};  /* function to validate test02.avi.*/
-//            vector<int> vec = {vibe_indicator, fd_indicator, validate_03(frame_num, stds, &fp, &fn, indicator)};  /* function to validate test03.avi.*/
-            NBClassifier.fit(&vec);
-        }
+            vector<int> vec = {vibe_indicator, fd_indicator, validate_03(frame_num, stds, &fp, &fn, indicator)};  /* function to validate test03.avi.*/
 
-        /* Used to check problematic frames.*/
-//        if (frame_num >= 9050 && frame_num <= 10000) {
-//            cout << "required frame reached." << endl;
-//            if (waitKey(0) == 27) {
-//                frame_num ++;
-//                continue;
-//            }
-//        }
+            if (frame_num <= 5000) {
+                NBClassifier.fit(&vec);
+            }
+        }
 
         /* Final termination condition.*/
         if (frame_num == capture.get(7)) {
@@ -211,7 +168,7 @@ int main(int argc, char* argv[])
         }
 
         /* Terminate anytime when esc is hit.*/
-        if (waitKey(25) == 27) {
+        if (waitKey(5) == 27) {
             break;
         }
 

@@ -52,3 +52,8 @@ where $Y$ stands for emptyness, and $X$ stands for door status (being open or no
 ### 2021.08.04
 * Revising and adding some notations.
 * Adding the naive bayes classifier is no worse than simple vibe. Robustness needs to be further validated.
+
+### 2021.08.05
+* Revising some notations.
+* Deleting some useless code blocks.
+* Bayesian works no worse than ViBe, however, no evidence is discovered to prove that Bayesian is more robust.
