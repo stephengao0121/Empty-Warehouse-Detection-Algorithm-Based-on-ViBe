@@ -4,9 +4,8 @@ A warehouse detection program based on ViBe algorithm, intending to determine wh
 
 ## Structure
 
-Vibe.h: header file of vibe class.  
-Vibe.cpp: definitions of useful methods of vibe class.  
-main.cpp: main functions, including reading video, determining empty or not and gathering error information.  
+Bayesian version: A bayesian version that combines vibe and frame difference to produce the result.
+vibe: A vibe based version.
 
 ## Revision compared to verbatim ViBe algorithm
 
@@ -57,3 +56,6 @@ where $Y$ stands for emptyness, and $X$ stands for door status (being open or no
 * Revising some notations.
 * Deleting some useless code blocks.
 * Bayesian works no worse than ViBe, however, no evidence is discovered to prove that Bayesian is more robust.
+
+### 2021.08.06
+* Adjusting structure. Both bayesian version and simple vibe version is given.
