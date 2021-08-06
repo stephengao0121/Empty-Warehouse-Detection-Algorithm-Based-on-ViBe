@@ -14,6 +14,8 @@ vibe: A vibe based version.
 3. Decreasing the background updating rate to 1/32.
 4. Adding a function that can process first 3 frames as the background model, by taking the pixels' average value.
 5. Removing large chunks of comments.
+6. Adding gamma correction to fight against light influences.
+7. Adding a naive bayes classifier that takes account of both vibe and frame difference, two of the most accurate and robust methods.
 
 ## Update Log
 ### 2021.07.22
