@@ -4,7 +4,7 @@ A warehouse detection program based on ViBe algorithm, intending to determine wh
 
 ## Structure
 
-Bayesian version: A bayesian version that combines vibe and frame difference to produce the result.
+Bayesian version: A bayesian version that combines vibe and frame difference to produce the result.  
 vibe: A vibe based version.
 
 ## Revision compared to verbatim ViBe algorithm
