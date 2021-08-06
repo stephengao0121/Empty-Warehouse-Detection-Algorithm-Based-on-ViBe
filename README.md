@@ -58,4 +58,4 @@ where $Y$ stands for emptyness, and $X$ stands for door status (being open or no
 * Bayesian works no worse than ViBe, however, no evidence is discovered to prove that Bayesian is more robust.
 
 ### 2021.08.06
-* Adjusting structure. Both bayesian version and simple vibe version is given.
+* Adjusting structure. Both bayesian version and simple vibe version is uploaded.
