@@ -6,6 +6,7 @@ A warehouse detection program based on ViBe algorithm, intending to determine wh
 
 Bayesian version: A bayesian version that combines vibe and frame difference to produce the result.  
 ViBe: A vibe based version.
+cnn: A convolutional neural network method.
 
 ## Revision compared to verbatim ViBe algorithm
 
@@ -61,3 +62,6 @@ where $Y$ stands for emptyness, and $X$ stands for door status (being open or no
 
 ### 2021.08.06
 * Adjusting structure. Both bayesian version and simple vibe version is uploaded.
+
+### 2021.08.09
+* Adding a new directory *cnn*, including a cnn method. Basic cnn structure and training process is done. Prediction process needs to be completed later.
