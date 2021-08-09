@@ -5,7 +5,7 @@ A warehouse detection program based on ViBe algorithm, intending to determine wh
 ## Structure
 
 Bayesian version: A bayesian version that combines vibe and frame difference to produce the result.  
-ViBe: A vibe based version.
+ViBe: A vibe based version.  
 cnn: A convolutional neural network method.
 
 ## Revision compared to verbatim ViBe algorithm
