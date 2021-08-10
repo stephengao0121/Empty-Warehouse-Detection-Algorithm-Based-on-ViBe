@@ -6,9 +6,9 @@ def weight_variable(shape, name='w'):
     return tf.Variable(initial(shape=shape), name=name)
 
 
-def biases_variable(shape):
+def biases_variable(shape, name='b'):
     initial = tf.constant(0.0, shape=shape)
-    return tf.Variable(initial)
+    return tf.Variable(initial, name=name)
 
 
 def conv2d(x, W, strides=None):
