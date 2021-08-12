@@ -38,7 +38,7 @@ def main():
     W_fc3 = utils.weight_variable([128, 2], name='w5')
     b_fc3 = utils.biases_variable([2], name='b5')
     prediction = tf.nn.softmax(tf.matmul(fc2_drop, W_fc3) + b_fc3)
-    correct_prediction = tf.equal(tf.argmax(ys, 1), tf.argmax(prediction, 1))
+    correct_prediction = tf.argmax(prediction, 1)
 
     loss = tf.losses.categorical_crossentropy(ys, prediction)
     train_step = tf.compat.v1.train.AdamOptimizer(1e-5).minimize(loss)
@@ -47,32 +47,6 @@ def main():
     sess.run(tf.compat.v1.global_variables_initializer())
 
     # Training process.
-    # Reading in the training set.
-    # dataset = []
-    # path = "./dataset"
-    # directory = os.listdir(path)
-    # os.chdir(path)
-    # for i in directory:
-    #     os.chdir("./" + i)
-    #     names = os.listdir("./below")
-    #     os.chdir("./below")
-    #     for j in names:
-    #         image = cv.imread(j)
-    #         image = cv.cvtColor(image[:, 120: 640], cv.COLOR_RGB2GRAY)
-    #         if i == 'empty':
-    #             dataset.append([np.reshape(image, [-1, 480, 520, 1]) / 255, [[1, 0]]])
-    #         else:
-    #             dataset.append([np.reshape(image, [-1, 480, 520, 1]) / 255, [[0, 1]]])
-    #     os.chdir("../..")
-    # np.random.shuffle(dataset)
-    # for i in range(len(dataset)):
-    #     sess.run(train_step, feed_dict={xs: dataset[i][0], ys: dataset[i][1], keep_prob: 0.5})
-    #     print(sess.run(prediction, feed_dict={xs: dataset[i][0], keep_prob: 0.5}))
-    #     print(sess.run(ys, feed_dict={xs: dataset[i][0], ys: dataset[i][1], keep_prob: 0.5}))
-    #     print(sess.run(loss, feed_dict={xs: dataset[i][0], ys: dataset[i][1], keep_prob: 0.5}))
-    #     if i % 10 == 0:
-    #         print("{} pictures trained.".format(i))
-
     # Video loading.
     name = "配送机器人-下仓体.avi"
     video = cv.VideoCapture(name)
@@ -88,11 +62,10 @@ def main():
     for i in range(len(frames) // 2):
         data = [np.reshape(cv.cvtColor(frames[i], cv.COLOR_RGB2GRAY), [-1, 480, 520, 1]) / 255, vd.label(i+1)]
         sess.run(train_step, feed_dict={xs: data[0], ys: data[1], keep_prob: 0.5})
-        print(sess.run(prediction, feed_dict={xs: data[0], keep_prob: 0.5}))
+        print(sess.run(correct_prediction, feed_dict={xs: data[0], keep_prob: 0.5}))
         print(sess.run(ys, feed_dict={xs: data[0], ys: data[1], keep_prob: 0.5}))
-        print(sess.run(loss, feed_dict={xs: data[0], ys: data[1], keep_prob: 0.5}))
-        if i % 100 == 0:
-            print("{} pictures trained.".format(i))
+        # print(sess.run(loss, feed_dict={xs: data[0], ys: data[1], keep_prob: 0.5}))
+        print("\r{} pictures trained.".format(i), end='', flush=True)
 
     print("Training done.")
 
@@ -102,11 +75,11 @@ def main():
     for i in range(len(frames) // 2, len(frames)):
         img = cv.cvtColor(frames[i], cv.COLOR_RGB2GRAY)
         img = np.reshape(img, [-1, 480, 520, 1]) / 255
-        y_pre = sess.run(prediction, feed_dict={xs: img, keep_prob: 0.5})
-        vd.validate(counter, tf.argmax(y_pre[0]), arr)
+        y_pre = sess.run(correct_prediction, feed_dict={xs: img, keep_prob: 0.5})
+        # print(y_pre)
+        vd.validate(counter, y_pre[0], arr)
         counter += 1
-        if counter % 100 == 0:
-            print("{} frames predicted.".format(counter))
+        print("\r{} frames predicted.".format(counter), end='', flush=True)
     print(arr)
 
 
