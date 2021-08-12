@@ -65,3 +65,8 @@ where $Y$ stands for emptyness, and $X$ stands for door status (being open or no
 
 ### 2021.08.09
 * Adding a new directory *cnn*, including a cnn method. Basic cnn structure and training process is done. Prediction process needs to be completed later.
+
+### 2021.08.11
+* Completing prediction process.
+* Expanding training dataset.
+* Changing to categorical data.
