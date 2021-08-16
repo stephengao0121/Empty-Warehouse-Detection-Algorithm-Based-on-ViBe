@@ -28,6 +28,7 @@ cnn: A convolutional neural network method.
 
 ### 2021.07.28
 * Adding some light compensation and removement methods, trying to eliminate the effect of variant illumination. After several experiments, gamma correction performs the best, and histogram performs well only on black background case, while others do not act well enough.
+* After adding ganna correction, the update rate can be increased to 1/28 without worsening the accuracy result. The programs performs a better robustness on white backgrounds.
 * Adding some annotations.
 
 ### 2021.07.29
