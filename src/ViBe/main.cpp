@@ -51,8 +51,8 @@ void norm(const Mat& src, Mat& dst){
 int main(int argc, char* argv[])
 {
     Mat frame, gray, FGModel;
-    VideoCapture capture;
-    capture = VideoCapture(R"(C:\Users\stephen.gao\Desktop\c\test03.avi)");
+    VideoCapture capture, capture_bg;
+    capture = VideoCapture(R"(C:\Users\stephen.gao\Desktop\c\door_test01.mp4)");
     if(!capture.isOpened()) {
         cout << "ERROR: Didn't find this video!" << endl;
         return 0;
@@ -77,13 +77,13 @@ int main(int argc, char* argv[])
             continue;
 
         /* gamma correction. (best)*/
-//        Mat X, I;
-//        frame.convertTo(X, CV_32FC1);
-//        float gamma = 1.5;
-//        pow(X, gamma, I);
-//        norm(I, frame);
+        Mat X, I;
+        frame.convertTo(X, CV_32FC1);
+        float gamma = 1.5;
+        pow(X, gamma, I);
+        norm(I, frame);
 
-        cvtColor(frame(Rect(120, 0, 520, 480)), gray, COLOR_RGB2GRAY);
+        cvtColor(frame(Rect(250, 0, 1030, 720)), gray, COLOR_RGB2GRAY);
         if (frame_num == 1)
         {
             vibe.init(gray);
@@ -97,13 +97,13 @@ int main(int argc, char* argv[])
             FGModel = vibe.getFGModel();
             morphologyEx(FGModel, FGModel, MORPH_OPEN, Mat());
             imshow("FGModel", FGModel);
-            imshow("input", frame(Rect(120, 0, 520, 480)));
+            imshow("input", frame(Rect(250, 0, 1030, 720)));
 
             /* Vibe decision.*/
-            for (int i = 0; i < 480; i += 40) {
+            for (int i = 0; i < 960; i += 70) {
                 indicator = false;
-                for (int j = 0; j < 440; j += 40) {
-                    Mat square = FGModel(Rect(i, j, 40, 40));
+                for (int j = 0; j < 650; j += 70) {
+                    Mat square = FGModel(Rect(i, j, 70, 70));
                     if (white_sum(&square, 100)) {
                         indicator = true;
                         break;
@@ -111,12 +111,33 @@ int main(int argc, char* argv[])
                 }
                 if (indicator) break;
             }
+//            if (frame_num >= 816){
+//                cout << "The decision is " << indicator << endl;
+//            }
 
             /* check tp, tn, fp, fn frames, and form a vector of results from both algorithms.*/
-            validate_01(frame_num, stds, &fp, &fn, indicator);  /* function to validate test01.avi.*/
+//            validate_01(frame_num, stds, &fp, &fn, indicator);  /* function to validate test01.avi.*/
 //            validate_02(frame_num, stds, &fp, &fn, indicator);  /* function to validate test02.avi.*/
 //            validate_03(frame_num, stds, &fp, &fn, indicator);  /* function to validate test03.avi.*/
+//            validate_04(frame_num, stds, &fp, &fn, indicator);  /* function to validate test04.mp4.*/
+//            validate_05(frame_num, stds, &fp, &fn, indicator);  /* function to validate test05.mp4.*/
+//            validate_06(frame_num, stds, &fp, &fn, indicator);  /* function to validate test06.mp4.*/
+//            validate_07(frame_num, stds, &fp, &fn, indicator);  /* function to validate test06.mp4.*/
+            if (door_close_01(frame_num)){
+                validate_door_01(frame_num, stds, &fp, &fn, indicator);
+            }
+//            if (door_close_02(frame_num)){
+//                validate_door_02(frame_num, stds, &fp, &fn, indicator);
+//            }
         }
+
+//        if (frame_num >= 4062 && frame_num <= 5000){
+//            cout << "This is the " << frame_num << "th frame" << endl;
+//            if (waitKey(0) == 27) {
+//                frame_num ++;
+//                continue;
+//            }
+//        }
 
         /* Final termination condition.*/
         if (frame_num == capture.get(7)) {
@@ -125,7 +146,7 @@ int main(int argc, char* argv[])
         }
 
         /* Terminate anytime when esc is hit.*/
-        if (waitKey(5) == 27) {
+        if (waitKey(10) == 27) {
             break;
         }
 

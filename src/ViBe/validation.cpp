@@ -82,3 +82,180 @@ bool validate_03(int num, int *arr, vector<int> *fp, vector<int> *fn, bool indic
         }
     }
 }
+
+bool validate_04(int num, int *arr, vector<int> *fp, vector<int> *fn, bool indicator){
+    if (indicator) {
+        if ((num <= 101) || (num >= 228 && num <= 314) || (num >= 428 && num <= 508)) {
+            arr[2]++;
+            fp->push_back(num);
+            return false;
+        }
+        else {
+            arr[0]++;
+            return true;
+        }
+    }
+    else {
+        if ((num <= 101) || (num >= 228 && num <= 314) || (num >= 428 && num <= 508)) {
+            arr[1] ++;
+            return false;
+        }
+        else {
+            arr[3]++;
+            fn->push_back(num);
+            return true;
+        }
+    }
+}
+
+bool validate_05(int num, int *arr, vector<int> *fp, vector<int> *fn, bool indicator){
+    if (indicator) {
+        if ((num >= 280 && num <= 349) || (num >= 575 && num <= 645) ||
+        (num >= 820 && num <= 935) || (num >= 1101 && num <= 1188) || (num >= 1332 && num <= 1479) ||
+        (num >= 1646 && num <= 1806) || (num >= 2002)) {
+            arr[2]++;
+            fp->push_back(num);
+            return false;
+        }
+        else {
+            arr[0]++;
+            return true;
+        }
+    }
+    else {
+        if ((num >= 280 && num <= 349) || (num >= 575 && num <= 645) ||
+        (num >= 820 && num <= 935) || (num >= 1101 && num <= 1188) || (num >= 1332 && num <= 1479) ||
+        (num >= 1646 && num <= 1806) || (num >= 2002)) {
+            arr[1] ++;
+            return false;
+        }
+        else {
+            arr[3]++;
+            fn->push_back(num);
+            return true;
+        }
+    }
+}
+
+bool validate_06(int num, int *arr, vector<int> *fp, vector<int> *fn, bool indicator){
+    if (indicator) {
+        if ((num <= 101) || (num >= 1455 && num <= 1645) || (num >= 2395 && num <= 2476) ||
+        (num >= 3968 && num <= 4214) || (num >= 5007)) {
+            arr[2]++;
+            fp->push_back(num);
+            return false;
+        }
+        else {
+            arr[0]++;
+            return true;
+        }
+    }
+    else {
+        if ((num <= 101) || (num >= 1455 && num <= 1645) || (num >= 2395 && num <= 2476) ||
+        (num >= 3968 && num <= 4214) || (num >= 5007)) {
+            arr[1] ++;
+            return false;
+        }
+        else {
+            arr[3]++;
+            fn->push_back(num);
+            return true;
+        }
+    }
+}
+
+bool validate_07(int num, int *arr, vector<int> *fp, vector<int> *fn, bool indicator){
+    if (indicator) {
+        if ((num <= 159) || (num >= 1833 && num <= 2017) || (num >= 3716)) {
+            arr[2]++;
+            fp->push_back(num);
+            return false;
+        }
+        else {
+            arr[0]++;
+            return true;
+        }
+    }
+    else {
+        if ((num <= 159) || (num >= 1833 && num <= 2017) || (num >= 3716)) {
+            arr[1] ++;
+            return false;
+        }
+        else {
+            arr[3]++;
+            fn->push_back(num);
+            return true;
+        }
+    }
+}
+
+bool door_close_01(int num){
+    if ((num <= 186) || (num >= 493 && num <= 702) || (num >= 917 && num <= 1096) || (num >= 1333 && num <= 1516) ||
+    (num >= 1729 && num <= 2006) || (num >= 2273 && num <= 2488) || (num >= 2744 && num <= 2978) || (num >= 3248)){
+        return true;
+    }
+    else{
+        return false;
+    }
+}
+
+bool validate_door_01(int num, int *arr, vector<int> *fp, vector<int> *fn, bool indicator){
+    if (indicator) {
+        if ((num <= 186) || (num >= 1333 && num <= 1516) || (num >= 3248)) {
+            arr[2]++;
+            fp->push_back(num);
+            return false;
+        }
+        else {
+            arr[0]++;
+            return true;
+        }
+    }
+    else {
+        if ((num <= 186) || (num >= 1333 && num <= 1516) || (num >= 3248)) {
+            arr[1] ++;
+            return false;
+        }
+        else {
+            arr[3]++;
+            fn->push_back(num);
+            return true;
+        }
+    }
+}
+
+bool door_close_02(int num){
+    if ((num <= 102) || (num >= 394 && num <= 668) || (num >= 937 && num <= 1123) || (num >= 1460 && num <= 1716) ||
+    (num >= 2104 && num <= 2354) || (num >= 2621 && num <= 2804) || (num >= 3120 && num <= 3388) ||
+    (num >= 3713 && num <= 4151) || (num >= 4462 && num <= 4584) || (num >= 4782)){
+        return true;
+    }
+    else{
+        return false;
+    }
+}
+
+bool validate_door_02(int num, int *arr, vector<int> *fp, vector<int> *fn, bool indicator){
+    if (indicator) {
+        if ((num <= 102) || (num >= 2621 && num <= 2804) || (num >= 4782)) {
+            arr[2]++;
+            fp->push_back(num);
+            return false;
+        }
+        else {
+            arr[0]++;
+            return true;
+        }
+    }
+    else {
+        if ((num <= 102) || (num >= 2621 && num <= 2804) || (num >= 4782)) {
+            arr[1] ++;
+            return false;
+        }
+        else {
+            arr[3]++;
+            fn->push_back(num);
+            return true;
+        }
+    }
+}
