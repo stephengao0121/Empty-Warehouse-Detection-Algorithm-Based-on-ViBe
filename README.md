@@ -71,3 +71,7 @@ where $Y$ stands for emptyness, and $X$ stands for door status (being open or no
 * Completing prediction process.
 * Expanding training dataset.
 * Changing to categorical data.
+
+### 2021.08.20
+* Removing cnn program. It does not work well.
+* Adding some codes in vibe for some new testcases. A new door_emulation test is implemented. Functions called door_test0x is for those cases.
