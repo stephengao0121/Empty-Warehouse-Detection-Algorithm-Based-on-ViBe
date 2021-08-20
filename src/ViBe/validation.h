@@ -10,10 +10,6 @@ using namespace std;
 bool validate_01(int num, int *arr, vector<int> *fp, vector<int> *fn, bool indicator = false);
 bool validate_02(int num, int *arr, vector<int> *fp, vector<int> *fn, bool indicator = false);
 bool validate_03(int num, int *arr, vector<int> *fp, vector<int> *fn, bool indicator = false);
-bool validate_04(int num, int *arr, vector<int> *fp, vector<int> *fn, bool indicator = false);
-bool validate_05(int num, int *arr, vector<int> *fp, vector<int> *fn, bool indicator = false);
-bool validate_06(int num, int *arr, vector<int> *fp, vector<int> *fn, bool indicator = false);
-bool validate_07(int num, int *arr, vector<int> *fp, vector<int> *fn, bool indicator = false);
 
 bool door_close_01(int num);
 bool validate_door_01(int num, int *arr, vector<int> *fp, vector<int> *fn, bool indicator = false);

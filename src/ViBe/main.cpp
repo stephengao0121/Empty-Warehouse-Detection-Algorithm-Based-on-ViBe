@@ -22,7 +22,11 @@
 #include "Vibe.h"
 #include "validation.h"
 
+#define THRESHOLD 100
+#define SQUARE_HEIGHT 70
+#define SQUARE_WIDTH 70
 
+/* Function to count the number of white pixels in the small square split from the frame. */
 bool white_sum(Mat *img, int threshold){
     int counter= 0;
     Mat_<uchar>::iterator it = img->begin<uchar>();
@@ -34,6 +38,7 @@ bool white_sum(Mat *img, int threshold){
     else return false;
 }
 
+/* Normalization function, useful in gamma correction. */
 void norm(const Mat& src, Mat& dst){
     switch(src.channels()){
         case 1:
@@ -100,11 +105,11 @@ int main(int argc, char* argv[])
             imshow("input", frame(Rect(250, 0, 1030, 720)));
 
             /* Vibe decision.*/
-            for (int i = 0; i < 960; i += 70) {
+            for (int i = 0; i < 1030 - SQUARE_WIDTH; i += SQUARE_WIDTH) {
                 indicator = false;
-                for (int j = 0; j < 650; j += 70) {
-                    Mat square = FGModel(Rect(i, j, 70, 70));
-                    if (white_sum(&square, 100)) {
+                for (int j = 0; j < 720 - SQUARE_HEIGHT; j += SQUARE_HEIGHT) {
+                    Mat square = FGModel(Rect(i, j, SQUARE_WIDTH, SQUARE_HEIGHT));
+                    if (white_sum(&square, THRESHOLD)) {
                         indicator = true;
                         break;
                     }
