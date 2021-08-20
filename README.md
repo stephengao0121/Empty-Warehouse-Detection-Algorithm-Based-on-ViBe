@@ -1,4 +1,4 @@
-# Empty Warehouse Detection Algorithm Based on ViBe and CNN.
+# Empty Warehouse Detection Algorithm Based on ViBe
   
 Some warehouse detection programs based on ViBe algorithm and CNN model, intending to determine whether the warehouse is empty or not.  
 
