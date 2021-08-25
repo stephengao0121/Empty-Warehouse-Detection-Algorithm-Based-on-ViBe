@@ -77,3 +77,7 @@ where $Y$ stands for emptyness, and $X$ stands for door status (being open or no
 * Adding some codes in vibe for some new testcases. A new door_emulation test is implemented. Functions called door_test0x is for those cases.
 * Removing some useless test code and add notations.
 * Adding macro definitions, for simplicity and readability.
+
+### 2021.08.25
+* Deleting some redundant notations.
+* The final version.
