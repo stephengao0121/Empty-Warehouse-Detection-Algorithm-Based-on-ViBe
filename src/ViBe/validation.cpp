@@ -1,5 +1,6 @@
 #include "validation.h"
 
+
 bool validate_01(int num, int *arr, vector<int> *fp, vector<int> *fn, bool indicator){
     if (indicator) {
         if ((num <= 94) || (num >= 2902 && num <= 2942) || (num >= 5320 && num <= 5393) ||
@@ -143,6 +144,43 @@ bool validate_door_02(int num, int *arr, vector<int> *fp, vector<int> *fn, bool 
     }
     else {
         if ((num <= 102) || (num >= 2621 && num <= 2804) || (num >= 4782)) {
+            arr[1] ++;
+            return false;
+        }
+        else {
+            arr[3]++;
+            fn->push_back(num);
+            return true;
+        }
+    }
+}
+
+bool door_close_03(int num){
+    if ((num <= 285) || (num >= 628 && num <= 883) || (num >= 1245 && num <= 1555) || (num >= 1894 && num <= 2101) ||
+    (num >= 2340 && num <= 2567) || (num >= 2816 && num <= 2988) || (num >= 3270 && num <= 3473) ||
+    (num >= 3787 && num <= 3950) || (num >= 4191 && num <= 4397) || (num >= 4691 && num <= 4964) ||
+    (num >= 5269 && num <= 5540) || (num >= 5908 && num <= 6088) || (num >= 6347)){
+        return true;
+    }
+    else{
+        return false;
+    }
+}
+
+bool validate_door_03(int num, int *arr, vector<int> *fp, vector<int> *fn, bool indicator){
+    if (indicator) {
+        if ((num <= 285) || (num >= 2816 && num <= 2988) || (num >= 5269 && num <= 5540) || (num >= 6347)) {
+            arr[2]++;
+            fp->push_back(num);
+            return false;
+        }
+        else {
+            arr[0]++;
+            return true;
+        }
+    }
+    else {
+        if ((num <= 285) || (num >= 2816 && num <= 2988) || (num >= 5269 && num <= 5540) || (num >= 6347)) {
             arr[1] ++;
             return false;
         }

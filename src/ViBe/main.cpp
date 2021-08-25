@@ -22,9 +22,10 @@
 #include "Vibe.h"
 #include "validation.h"
 
-#define THRESHOLD 100
-#define SQUARE_HEIGHT 70
-#define SQUARE_WIDTH 70
+#define THRESHOLD  100
+#define SQUARE_HEIGHT  70
+#define SQUARE_WIDTH  70
+
 
 /* Function to count the number of white pixels in the small square split from the frame. */
 bool white_sum(Mat *img, int threshold){
@@ -32,7 +33,7 @@ bool white_sum(Mat *img, int threshold){
     Mat_<uchar>::iterator it = img->begin<uchar>();
     Mat_<uchar>::iterator end = img->end<uchar>();
     for(; it != end; it++){
-        if (*it == 255) counter ++;
+        if (*it == 255) counter++;
     }
     if (counter >= threshold) return true;
     else return false;
@@ -57,7 +58,9 @@ int main(int argc, char* argv[])
 {
     Mat frame, gray, FGModel;
     VideoCapture capture, capture_bg;
-    capture = VideoCapture(R"(C:\Users\stephen.gao\Desktop\c\door_test01.mp4)");
+
+    /* Loading the target video.*/
+    capture = VideoCapture(R"(C:\Users\stephen.gao\Desktop\c\door_test03.mp4)");
     if(!capture.isOpened()) {
         cout << "ERROR: Didn't find this video!" << endl;
         return 0;
@@ -72,11 +75,12 @@ int main(int argc, char* argv[])
     ViBe vibe;
     bool indicator = false;
     int frame_num = 1;
-    int stds[4]{0, 0, 0, 0};
-    vector<int> fp, fn;
+    int stds[4]{0, 0, 0, 0};  /* Statistics needed.*/
+    vector<int> fp, fn;  /* Container for error frames.*/
 
     while (1)
     {
+        /* Reading in a frame.*/
         capture >> frame;
         if (frame.empty())
             continue;
@@ -91,20 +95,21 @@ int main(int argc, char* argv[])
         cvtColor(frame(Rect(250, 0, 1030, 720)), gray, COLOR_RGB2GRAY);
         if (frame_num == 1)
         {
+            /* Take the first frame to construct the model.*/
             vibe.init(gray);
-            /* Take only the first frame to construct the model.*/
             vibe.ProcessFirstFrame(gray);
             cout << "Training ViBe Success." << endl;
         }
         else
         {
+            /* Run vibe on frames, and use morphology filter to sharpen the object.*/
             vibe.Run(gray);
             FGModel = vibe.getFGModel();
             morphologyEx(FGModel, FGModel, MORPH_OPEN, Mat());
             imshow("FGModel", FGModel);
             imshow("input", frame(Rect(250, 0, 1030, 720)));
 
-            /* Vibe decision.*/
+            /* Decision.*/
             for (int i = 0; i < 1030 - SQUARE_WIDTH; i += SQUARE_WIDTH) {
                 indicator = false;
                 for (int j = 0; j < 720 - SQUARE_HEIGHT; j += SQUARE_HEIGHT) {
@@ -116,33 +121,22 @@ int main(int argc, char* argv[])
                 }
                 if (indicator) break;
             }
-//            if (frame_num >= 816){
-//                cout << "The decision is " << indicator << endl;
-//            }
 
-            /* check tp, tn, fp, fn frames, and form a vector of results from both algorithms.*/
+            /* Check tp, tn, fp, fn frames, and form a vector of results from both algorithms. This only works for
+             * testcases given in folder testset. When actually integrating into the robot, remove this part.*/
 //            validate_01(frame_num, stds, &fp, &fn, indicator);  /* function to validate test01.avi.*/
 //            validate_02(frame_num, stds, &fp, &fn, indicator);  /* function to validate test02.avi.*/
 //            validate_03(frame_num, stds, &fp, &fn, indicator);  /* function to validate test03.avi.*/
-//            validate_04(frame_num, stds, &fp, &fn, indicator);  /* function to validate test04.mp4.*/
-//            validate_05(frame_num, stds, &fp, &fn, indicator);  /* function to validate test05.mp4.*/
-//            validate_06(frame_num, stds, &fp, &fn, indicator);  /* function to validate test06.mp4.*/
-//            validate_07(frame_num, stds, &fp, &fn, indicator);  /* function to validate test06.mp4.*/
-            if (door_close_01(frame_num)){
-                validate_door_01(frame_num, stds, &fp, &fn, indicator);
-            }
+//            if (door_close_01(frame_num)){
+//                validate_door_01(frame_num, stds, &fp, &fn, indicator);
+//            }
 //            if (door_close_02(frame_num)){
 //                validate_door_02(frame_num, stds, &fp, &fn, indicator);
 //            }
+            if (door_close_03(frame_num)){
+                validate_door_03(frame_num, stds, &fp, &fn, indicator);
+            }
         }
-
-//        if (frame_num >= 4062 && frame_num <= 5000){
-//            cout << "This is the " << frame_num << "th frame" << endl;
-//            if (waitKey(0) == 27) {
-//                frame_num ++;
-//                continue;
-//            }
-//        }
 
         /* Final termination condition.*/
         if (frame_num == capture.get(7)) {
@@ -151,14 +145,14 @@ int main(int argc, char* argv[])
         }
 
         /* Terminate anytime when esc is hit.*/
-        if (waitKey(10) == 27) {
+        if (waitKey(1) == 27) {
             break;
         }
 
         frame_num ++;
     }
 
-    /* Visualize tp, tn, fp, fn numbers and positions.*/
+    /* Visualize tp, tn, fp, fn numbers and positions. When actually integrating into the robot, remove this part.*/
     cout << "The TP is " << stds[0] << endl;
     cout << "The TN is " << stds[1] << endl;
     cout << "The FP is " << stds[2] << endl;
