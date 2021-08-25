@@ -36,11 +36,11 @@ using namespace std;
 
 // Sqthere半径默认值
 // the Default Radius of pixel value
-#define DEFAULT_RADIUS  16
+#define DEFAULT_RADIUS  20
 
 // 子采样概率默认值
 // the Default the probability of random sample
-#define DEFAULT_RANDOM_SAMPLE  16
+#define DEFAULT_RANDOM_SAMPLE  20
 
 class ViBe
 {
