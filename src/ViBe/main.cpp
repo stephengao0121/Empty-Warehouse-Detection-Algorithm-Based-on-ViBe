@@ -22,6 +22,7 @@
 #include "Vibe.h"
 #include "validation.h"
 
+/* Macros needed.*/
 #define THRESHOLD  100
 #define SQUARE_HEIGHT  70
 #define SQUARE_WIDTH  70
@@ -92,6 +93,7 @@ int main(int argc, char* argv[])
         pow(X, gamma, I);
         norm(I, frame);
 
+        /* Converting frames to gray image. Remember to change the size according to the camera solution.*/
         cvtColor(frame(Rect(250, 0, 1030, 720)), gray, COLOR_RGB2GRAY);
         if (frame_num == 1)
         {
@@ -107,7 +109,7 @@ int main(int argc, char* argv[])
             FGModel = vibe.getFGModel();
             morphologyEx(FGModel, FGModel, MORPH_OPEN, Mat());
             imshow("FGModel", FGModel);
-            imshow("input", frame(Rect(250, 0, 1030, 720)));
+            imshow("input", frame(Rect(250, 0, 1030, 720))); /* Remember to change the size according to the camera solution.*/
 
             /* Decision.*/
             for (int i = 0; i < 1030 - SQUARE_WIDTH; i += SQUARE_WIDTH) {
